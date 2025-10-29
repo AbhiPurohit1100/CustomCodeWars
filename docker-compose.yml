@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shodha-backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/data:/app/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: shodha-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+
