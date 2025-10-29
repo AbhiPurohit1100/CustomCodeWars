@@ -40,11 +40,10 @@ public class DataLoader {
 
         contestRepo.save(c);
 
-        // Second contest with different problems
         Contest c2 = new Contest();
         c2.setTitle("Algorithms Warmup");
 
-        // Problem 1: Multiply two integers
+
         Problem m1 = new Problem();
         m1.setTitle("A * B");
         m1.setStatement("Read two integers and output their product.");
@@ -53,7 +52,7 @@ public class DataLoader {
         ProblemTestCase m1t2 = new ProblemTestCase(); m1t2.setProblem(m1); m1t2.setInputText("-5 7\n"); m1t2.setExpectedOutput("-35"); m1t2.setOrderIndex(2);
         m1.getTestCases().add(m1t1); m1.getTestCases().add(m1t2);
 
-        // Problem 2: Palindrome check (YES/NO)
+
         Problem m2 = new Problem();
         m2.setTitle("Palindrome");
         m2.setStatement("Read a line and print YES if it is a palindrome, otherwise NO.");

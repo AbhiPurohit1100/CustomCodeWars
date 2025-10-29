@@ -6,10 +6,14 @@ services:
     container_name: shodha-backend
     environment:
       - SPRING_PROFILES_ACTIVE=default
+      - JUDGE_MODE=docker
+      - DOCKER_HOST=tcp://docker:2375
     ports:
       - "8080:8080"
     volumes:
       - ./backend/data:/app/data
+    depends_on:
+      - docker
 
   frontend:
     build:
@@ -20,5 +24,17 @@ services:
       - "5173:5173"
     depends_on:
       - backend
+
+  docker:
+    image: docker:24-dind
+    container_name: shodha-docker
+    privileged: true
+    environment:
+      - DOCKER_TLS_CERTDIR=
+    volumes:
+      - dind-storage:/var/lib/docker
+
+volumes:
+  dind-storage:
 
 

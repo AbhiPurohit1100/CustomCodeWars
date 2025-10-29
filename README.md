@@ -8,7 +8,7 @@ A prototype coding contest platform.
 - Execution Engine: Compiles and runs user Java code locally inside the backend container (javac/java, JDK 17)
 - Monorepo layout: `frontend/` and `backend/`
 
-## Quick Start (local dev)
+## Quick Start 
 
 
 ### Run with Docker Compose
@@ -32,7 +32,7 @@ Stop:
 docker compose down
 ```
 
-## API Design (overview)
+## API Design 
 
 - GET `/api/contests/{contestId}`
   - Returns contest details with problems (statement only, no answers)
@@ -61,7 +61,7 @@ Request/Response examples are included inline in controller JavaDoc and below.
 { "id": 5, "status": "PENDING" }
 ```
 
-## Design choices (plain and simple)
+## Design choices
 
 - Compiling: I just compile and run Java inside the backend container using the JDK (javac/java). There’s a small timeout (~3s) and a small heap (`-Xmx256m`).
 - Database: I used an H2 file database so we don’t have to install anything. `docker-compose.yml` builds and runs both apps.
@@ -74,5 +74,23 @@ Request/Response examples are included inline in controller JavaDoc and below.
 - `backend/` — Spring Boot service, REST API, async judge
 - `frontend/` — React + Tailwind app (Join and Contest pages)
 - `docker-compose.yml` — one command to build and run locally
+
+### Optional: Docker-based judging mode
+
+By default the judge compiles/runs code inside the backend container using the JDK. If you want each test to run in its own Docker container (extra isolation), you can enable Docker mode:
+
+1) Turn on Docker mode in compose (already set):
+  - `JUDGE_MODE=docker`
+  - A `docker:24-dind` sidecar is included and the backend talks to it via `DOCKER_HOST=tcp://docker:2375`.
+
+2) What it does under the hood:
+  - Creates a temporary Docker volume per submission
+  - Writes `Main.java` into that volume (via a tiny Alpine helper)
+  - Compiles with `openjdk:17` in a container
+  - Runs per test in a fresh container with `--network none`, `--cpus 0.5`, `-m 256m`, `--pids-limit 128`, piping the test input via stdin and capturing stdout
+  - Cleans up the volume afterwards
+
+3) First run notes:
+  - The judge will pull `alpine` and `openjdk:17` inside the sidecar on first use; this can take a bit longer.
 
 

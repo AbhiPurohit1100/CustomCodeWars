@@ -53,7 +53,7 @@ public class AdminController {
         return ResponseEntity.ok("Contest 2 seeded");
     }
 
-    // List contests (admin view)
+
     @GetMapping("/contests")
     public ResponseEntity<?> listContests() {
         List<ContestSummary> list = contestRepo.findAll().stream()
@@ -63,7 +63,7 @@ public class AdminController {
         return ResponseEntity.ok(list);
     }
 
-    // Create a new contest
+ 
     @PostMapping("/contests")
     public ResponseEntity<?> createContest(@Valid @RequestBody CreateContestRequest req) {
         if (contestRepo.findByTitle(req.title).isPresent()) {
@@ -75,7 +75,6 @@ public class AdminController {
         return ResponseEntity.ok(new IdResponse(c.getId()));
     }
 
-    // Create a problem under a contest
     @PostMapping("/contests/{contestId}/problems")
     public ResponseEntity<?> createProblem(@PathVariable("contestId") Long contestId, @Valid @RequestBody CreateProblemRequest req) {
         Optional<Contest> oc = contestRepo.findById(contestId);
@@ -90,7 +89,7 @@ public class AdminController {
         return ResponseEntity.ok(new IdResponse(p.getId()));
     }
 
-    // Add a test case to a problem
+
     @PostMapping("/problems/{problemId}/tests")
     public ResponseEntity<?> addTest(@PathVariable("problemId") Long problemId, @Valid @RequestBody CreateTestCaseRequest req) {
         Optional<Problem> op = problemRepo.findById(problemId);
